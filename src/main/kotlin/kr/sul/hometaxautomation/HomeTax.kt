@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 
 object HomeTax {
-    private const val HOME_URL = "https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index.xml"
+    const val HOME_URL = "https://www.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/pp/index.xml"
 
     fun makeUserToLogin(driver: RemoteWebDriver) {
         driver.get(HOME_URL)

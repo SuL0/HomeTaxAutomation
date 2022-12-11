@@ -5,14 +5,15 @@ import org.openqa.selenium.By
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.io.File
 
 class PrintPage(
     private val driver: RemoteWebDriver,
     private val companyName: String,
-    private val incomeClassification: String
+    private val incomeClassification: String,
+    private val whereToDownload: File
 ) {
     private val originalWindow = driver.windowHandle
-    private val whereToDownload = WithHoldingTax.WHERE_TO_DOWNLOAD
 
     // delay 때문에 init{} 에 선언하지 않았음
     private fun init() {

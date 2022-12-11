@@ -7,11 +7,13 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.io.File
 
 // 납부서 목록
 class ListOfInvoicePage(
     private val driver: RemoteWebDriver,
-    private val companyName: String
+    private val companyName: String,
+    private val whereToDownload: File
 ) {
     fun run() {
         driver.switchTo().frame("UTERNAAB40_iframe")
@@ -38,7 +40,8 @@ class ListOfInvoicePage(
                     PrintPage(
                         driver,
                         companyName,
-                        incomeClassification
+                        incomeClassification,
+                        whereToDownload
                     ).savePrint()
                 }
             WebDriverWait(driver, 1).until(
