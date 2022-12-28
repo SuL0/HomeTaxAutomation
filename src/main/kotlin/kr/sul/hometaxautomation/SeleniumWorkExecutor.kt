@@ -42,9 +42,9 @@ open class SeleniumWorkExecutor(
         activeDrivers.add(driver)
     }
 
-    fun makeWork() {
-        seleniumWork.getConstructor(RemoteWebDriver::class.java)
-            .newInstance(driver)
+    fun makeWork(vararg args: Any) {
+        seleniumWork.getConstructor(RemoteWebDriver::class.java, *(args.map { it::class.java }.toTypedArray()))
+            .newInstance(driver, *args)
             .run()
     }
 }

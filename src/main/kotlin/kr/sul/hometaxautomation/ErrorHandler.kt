@@ -33,7 +33,7 @@ class ErrorHandler(
 
     fun displayErrorAlert() {
         val stackTrace = e.stackTrace.map { it.toString() }
-        val list = JList(arrayOf(e.message, " ", " ", *stackTrace.toTypedArray()))
+        val list = JList(arrayOf(e.message ?: e::class.java.name, " ", *stackTrace.toTypedArray()))
         val scrollPane = JScrollPane(list)
         scrollPane.preferredSize = Dimension(800, 250)
         JOptionPane.showMessageDialog(
@@ -42,6 +42,8 @@ class ErrorHandler(
             "에러",
             JOptionPane.ERROR_MESSAGE
         )
-//        JOptionPane.showMessageDialog(null, e.stackTrace, "", JOptionPane.ERROR_MESSAGE)
+    }
+    fun displaySimpleErrorAlert() {
+        JOptionPane.showMessageDialog(null, e.stackTrace, e.message ?: e::class.java.name, JOptionPane.ERROR_MESSAGE)
     }
 }
