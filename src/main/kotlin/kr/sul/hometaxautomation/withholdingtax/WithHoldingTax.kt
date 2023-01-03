@@ -41,13 +41,19 @@ class WithHoldingTax(
                     ExpectedConditions.alertIsPresent()
                 ).accept()
                 WebDriverWait(driver, 10).until(
-                    ExpectedConditions.elementToBeClickable(By.cssSelector("table.gridHeaderTableDefault tbody tr"))
+                    ExpectedConditions.elementToBeClickable(By.cssSelector("#ttirnam101DVOListDes_body_table tbody tr"))
                 )
             }
 
-            val tableRows = driver.findElements(By.cssSelector("table.gridHeaderTableDefault tbody tr"))
+            val tableRows = driver.findElements(By.cssSelector("#ttirnam101DVOListDes_body_table tbody tr"))
                 .filter {
                     !it.getAttribute("class").contains("w2grid_hidedRow")  // idk why but 숨겨진 tr들이 밑에 꽤 있는 페이지가 있음
+                }.filter {
+                    try {
+                        it.findElement(By.cssSelector("td:nth-child(14) button")) != null
+                    } catch (e: Exception) {
+                        false
+                    }
                 }
                 .forEach { tableRow ->
                     driver.switchTo().defaultContent()
@@ -83,7 +89,7 @@ class WithHoldingTax(
 
     private fun waitForUserToClickInquireButton() {
         // Wait for user to click inquire button (= wait for pop up an alert)
-        By.cssSelector("table.gridHeaderTableDefault tbody tr").let {
+        By.cssSelector("#ttirnam101DVOListDes_body_table tbody tr").let {
             do {
                 try {
                     WebDriverWait(driver, Duration.ofMillis(500)).until(
