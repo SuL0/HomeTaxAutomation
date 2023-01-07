@@ -3,72 +3,79 @@ package kr.sul.hometaxautomation
 import kr.sul.hometaxautomation.excelviewer.ExcelViewer
 import kr.sul.hometaxautomation.excelviewer.JTableRenderer
 import kr.sul.hometaxautomation.globalincometax.GlobalIncomeTax
+import kr.sul.hometaxautomation.util.CurrentDisplaying
+import kr.sul.hometaxautomation.util.SeleniumWorkExecutor
 import kr.sul.hometaxautomation.withholdingtax.WithHoldingTax
 
 object Main {
+    lateinit var currentDisplaying: CurrentDisplaying
+
 
     @JvmStatic
     fun main(args: Array<String>) {
         try {
-            when (MainGUI().makeUserToSelectWhatToDo()) {
-                // 원천세
-                MainGUI.withHoldingTaxButton.model -> {
-                    SeleniumWorkExecutor(
-                        WithHoldingTax::class.java
-                    ).makeWork()
-                }
-                MainGUI.vatButton.model -> {
-                }
-                MainGUI.button3.model -> {
-                }
-                MainGUI.globalIncomeTaxButton.model -> {
-                    val acceptedFile = FileAcceptorGUI.acceptExcelFile()
-                    val excel = acceptedFile.second
-
-                    val cellToColor = excel.getData(0).map outer@ {
-                        it.map inner@ { cellValue ->
-                            if (cellValue == null) return@inner null
-                            val nonDigitRemoved = cellValue.replace(Regex("\\D"), "")
-                            if (nonDigitRemoved.length == 13 || nonDigitRemoved.length == 10) {
-                                return@inner nonDigitRemoved.toInt()
-                            }
-                            return@inner null
-                        }
+            // it runs on another thread
+            MainGUI().addEnterButtonListener {
+                when (it) {
+                    // 원천세
+                    MainGUI.withHoldingTaxButton.model -> {
+                        SeleniumWorkExecutor(
+                            WithHoldingTax::class.java
+                        ).makeWork()
                     }
-                    val identificationNumbers = cellToColor.flatten()
-
-                    ExcelViewer(excel, 0, JTableRenderer(cellToColor)).show()
-                    SeleniumWorkExecutor(
-                        GlobalIncomeTax::class.java
-                    ).makeWork(
-                        identificationNumbers
-                    )
-                }
-                MainGUI.socialInsuranceButton.model -> {
-                    val acceptedFile = FileAcceptorGUI.acceptExcelFile()
-                    val excel = acceptedFile.second
-
-                    val cellToColor = excel.getData(0).map outer@ {
-                        it.map inner@ { cellValue ->
-                            if (cellValue == null) return@inner null
-                            val nonDigitRemoved = cellValue.replace(Regex("\\D"), "")
-                            if (nonDigitRemoved.length == 13) {
-                                return@inner nonDigitRemoved.toInt()
-                            }
-                            return@inner null
-                        }
+                    MainGUI.vatButton.model -> {
                     }
-                    val identificationNumbers = cellToColor.flatten()
+                    MainGUI.button3.model -> {
+                    }
+                    MainGUI.globalIncomeTaxButton.model -> {
+                        val acceptedFile = FileAcceptorGUI.acceptExcelFile()
+                        val excel = acceptedFile.second
 
-                    ExcelViewer(excel, 0, JTableRenderer(cellToColor)).show()
-                    SeleniumWorkExecutor(
-                        GlobalIncomeTax::class.java
-                    ).makeWork(
-                        identificationNumbers
-                    )
+                        val cellToColor = excel.getData(0).map outer@{
+                            it.map inner@{ cellValue ->
+                                if (cellValue == null) return@inner null
+                                val nonDigitRemoved = cellValue.replace(Regex("\\D"), "")
+                                if (nonDigitRemoved.length == 13 || nonDigitRemoved.length == 10) {
+                                    return@inner nonDigitRemoved.toInt()
+                                }
+                                return@inner null
+                            }
+                        }
+                        val identificationNumbers = cellToColor.flatten()
+
+                        ExcelViewer(excel, 0, JTableRenderer(cellToColor)).show()
+                        SeleniumWorkExecutor(
+                            GlobalIncomeTax::class.java
+                        ).makeWork(
+                            identificationNumbers
+                        )
+                    }
+                    MainGUI.socialInsuranceButton.model -> {
+                        val acceptedFile = FileAcceptorGUI.acceptExcelFile()
+                        val excel = acceptedFile.second
+
+                        val cellToColor = excel.getData(0).map outer@{
+                            it.map inner@{ cellValue ->
+                                if (cellValue == null) return@inner null
+                                val nonDigitRemoved = cellValue.replace(Regex("\\D"), "")
+                                if (nonDigitRemoved.length == 13) {
+                                    return@inner nonDigitRemoved.toInt()
+                                }
+                                return@inner null
+                            }
+                        }
+                        val identificationNumbers = cellToColor.flatten()
+
+                        ExcelViewer(excel, 0, JTableRenderer(cellToColor)).show()
+                        SeleniumWorkExecutor(
+                            GlobalIncomeTax::class.java
+                        ).makeWork(
+                            identificationNumbers
+                        )
+                    }
+                    else -> throw Exception("알 수 없는 선택입니다")
                 }
-                else -> throw Exception("알 수 없는 선택입니다")
-            }
+            }.makeUserToSelectWhatToDo()
         } catch (e: Exception) {
             ErrorHandler(e).run {
                 makeDumpFile()

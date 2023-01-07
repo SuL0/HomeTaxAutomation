@@ -1,7 +1,7 @@
-package kr.sul.hometaxautomation
+package kr.sul.hometaxautomation.util
 
 import io.github.bonigarcia.wdm.WebDriverManager
-import org.openqa.selenium.chrome.ChromeDriver
+import kr.sul.hometaxautomation.FileUtil
 import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.chromium.ChromiumDriver
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -32,7 +32,8 @@ open class SeleniumWorkExecutor(
             put("safebrowsing.enabled", true)
             this
         }
-        driver = ChromeDriver(
+
+        driver = CustomChromeDriver(
             ChromeOptions().setExperimentalOption("prefs", prefs)
                 .addArguments(
 //                    "--user-data-dir=${profilePath}",  // TODO 테스트용

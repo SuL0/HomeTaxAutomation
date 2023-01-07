@@ -2,7 +2,7 @@ package kr.sul.hometaxautomation.withholdingtax
 
 import kr.sul.hometaxautomation.FileUtil
 import kr.sul.hometaxautomation.HomeTax
-import kr.sul.hometaxautomation.SeleniumWork
+import kr.sul.hometaxautomation.util.SeleniumWork
 import org.openqa.selenium.By
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -18,11 +18,16 @@ class WithHoldingTax(
 ): SeleniumWork {
     private val homeUrl = HomeTax.HOME_URL
     private val whereToDownload = File("${FileUtil.parentPath}/원천세")
+    private val completedCompanies = arrayListOf<String>()
+    private val failedCompanies = arrayListOf<String>()
+
+
     init {
         if (!whereToDownload.exists()) {
             whereToDownload.mkdirs()
         }
     }
+
 
     override fun run() {
         HomeTax.makeUserToLogin(driver)
@@ -55,6 +60,8 @@ class WithHoldingTax(
                     val companyName = tableRow.findElement(By.cssSelector("td:nth-child(7) > span")).text
                         .replace("주식회사", "(주)")
                         .replace(" ", "")
+                    failedCompanies.add(companyName)
+
                     driver.switchTo().defaultContent() // txppIframe에 있는 상태에서 txppIframe으로 전환을 시도하면 exception이 발생하기 때문
                     driver.switchTo().frame("txppIframe")
                     tableRow.findElement(By.cssSelector("td:nth-child(14) button")).click()

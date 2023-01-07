@@ -3,6 +3,7 @@ package kr.sul.hometaxautomation
 import kr.sul.hometaxautomation.excelviewer.ExcelFile
 import kr.sul.hometaxautomation.excelviewer.ExcelViewer
 import kr.sul.hometaxautomation.excelviewer.JTableRenderer
+import kr.sul.hometaxautomation.util.CustomJFrame
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.dnd.*
@@ -27,11 +28,10 @@ class FileAcceptorGUI<T> private constructor(
             }.acceptFile()
         }
     }
-    private lateinit var frame: JDialog
+    private lateinit var frame: CustomJFrame
     private var returnValueConveyor: T? = null
     fun acceptFile(): T {
-        frame = JDialog().run {
-            isModal = true // 코드를 멈추게 하기 위해 필요한 isModal = true
+        frame = CustomJFrame().run {
             setSize(450, 250)
             setLocationRelativeTo(null)
             val label = JLabel("${nameOfWhatToAccept}을 여기로 드래그", SwingConstants.CENTER).run {

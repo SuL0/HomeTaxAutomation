@@ -37,7 +37,7 @@ class ListOfInvoicePage(
                         return@forEachIndexed
                     }
 
-                    PrintPage(
+                    WithHoldingTaxPrintPage(
                         driver,
                         companyName,
                         incomeClassification,

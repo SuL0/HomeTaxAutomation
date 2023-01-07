@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.io.File
 
-class PrintPage(
+class WithHoldingTaxPrintPage(
     private val driver: RemoteWebDriver,
     private val companyName: String,
     private val incomeClassification: String,
@@ -40,7 +40,7 @@ class PrintPage(
                 .replace("월", "")
                 .replace("일", "")
                 .replace(" ", "") // 납부기한
-            return@run "${companyName}-${deadLine}납부서-${incomeClassification}"
+            return@run "$companyName ${deadLine}납부서 $incomeClassification"
         }
         WebDriverWait(driver, 10)
             .until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[title='저장']")))

@@ -1,12 +1,20 @@
 package kr.sul.hometaxautomation.excelviewer
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileInputStream
 
 class ExcelFile(val file: File) {
-    private val excel = XSSFWorkbook(FileInputStream(file))
+    private val excel = run {
+        try {
+            XSSFWorkbook(FileInputStream(file))
+        } catch (e: Exception) {
+            HSSFWorkbook(FileInputStream(file))
+        }
+    }
+
 
     fun getData(sheetNum: Int=0): Array<Array<String?>> {
         val sheet = excel.getSheetAt(sheetNum)

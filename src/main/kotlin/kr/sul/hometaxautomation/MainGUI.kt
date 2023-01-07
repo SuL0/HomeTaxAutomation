@@ -1,12 +1,16 @@
 package kr.sul.hometaxautomation
 
+import kr.sul.hometaxautomation.util.CustomJFrame
 import kr.sul.hometaxautomation.util.StyledButtonUI
 import java.awt.Color
 import java.awt.Font
-import javax.swing.*
+import javax.swing.ButtonGroup
+import javax.swing.ButtonModel
+import javax.swing.JButton
+import javax.swing.JRadioButton
 
 class MainGUI {
-    private var frame: JDialog? = null
+    private var frame: CustomJFrame? = null
     companion object {
         val withHoldingTaxButton = JRadioButton("원천세", true).run {
             setBounds(20, 20, 200, 50)
@@ -34,6 +38,8 @@ class MainGUI {
             }
         }
     }
+
+
     private val buttonGroup = ButtonGroup().run {
         add(withHoldingTaxButton)
         add(vatButton)
@@ -47,18 +53,27 @@ class MainGUI {
         setBounds(260, 30, 70, 30)
         background = Color(14, 185, 190)
         foreground = Color.white
-        setUI(StyledButtonUI())
+        ui = StyledButtonUI()
         addActionListener {
             frame!!.dispose()
         }
         this
     }
-    fun makeUserToSelectWhatToDo(): ButtonModel {
-        frame = JDialog().run {
-            isModal = true // 코드 멈추게 하기 위해 필요한 설정
+
+    fun addEnterButtonListener(r: (ButtonModel) -> Unit): MainGUI {
+        enterButton.addActionListener {
+            Thread {
+                r.invoke(buttonGroup.selection)
+            }.start()
+        }
+        return this
+    }
+
+    fun makeUserToSelectWhatToDo() {
+        frame = CustomJFrame().run {
             setSize(380, 380)
             setLocationRelativeTo(null)
-            val buttonIterator = buttonGroup.elements.asIterator()
+            val buttonIterator = buttonGroup.elements.iterator()
             layout = null
             while(buttonIterator.hasNext()) {
                 add(buttonIterator.next())
@@ -66,15 +81,6 @@ class MainGUI {
             add(enterButton)
             this
         }
-        frame!!.isVisible = true  // frame이 닫기기 전까지 여기서 코드 멈춤
-        return buttonGroup.selection
+        frame!!.isVisible = true
     }
-
-
-
-
-
-
-
-
 }

@@ -1,10 +1,10 @@
 package kr.sul.hometaxautomation.excelviewer
 
+import kr.sul.hometaxautomation.util.CustomJFrame
 import kr.sul.hometaxautomation.util.StyledButtonUI
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Font
-import java.io.File
 import javax.swing.*
 
 
@@ -13,7 +13,7 @@ class ExcelViewer(
     private val sheetNum: Int=0,
     private val renderer: JTableRenderer?=null)
 {
-    private lateinit var mainFrame: JDialog
+    private lateinit var mainFrame: CustomJFrame
     private val data = excelFile.getData(sheetNum)
 
     private val table = JTable(
@@ -44,8 +44,7 @@ class ExcelViewer(
     }
 
     fun show() {
-        mainFrame = JDialog().run mainFrame@ {
-            this.isModal = true // 코드 멈추게 하기 위해 필요한 설정
+        mainFrame = CustomJFrame().run mainFrame@ {
             this.setSize(
                 table.preferredSize.width+19,
                 (table.preferredSize.height + 100 + table.preferredSize.height*0.3).toInt()
