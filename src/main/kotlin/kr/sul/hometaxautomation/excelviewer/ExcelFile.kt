@@ -52,9 +52,11 @@ class ExcelFile(val file: File) {
     fun getNumCols(sheetNum: Int=0): Int {
         var max = 0
         for (i in 0 until getNumRows(sheetNum)) {
-            if (max < excel.getSheetAt(sheetNum).getRow(i).lastCellNum.toInt()) {
-                max = excel.getSheetAt(sheetNum).getRow(i).lastCellNum.toInt()
-            }
+            try { // If row don't have any content, it can throw Exception
+                if (max < excel.getSheetAt(sheetNum).getRow(i).lastCellNum.toInt()) {
+                    max = excel.getSheetAt(sheetNum).getRow(i).lastCellNum.toInt()
+                }
+            } catch (ignored: Exception) {}
         }
         return max
     }
